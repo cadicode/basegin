@@ -152,6 +152,12 @@ func RegisterAPIRoute(ginEngine *gin.Engine, controllers []IBaseController) {
 	routesControllerMapping(ginEngine, controllers)
 }
 
+func RegisterAPIRouteByMapping(ginEngine *gin.Engine, groupedControllers map[string][]IBaseController) {
+	for k, v := range groupedControllers {
+		RegisterGroupAPIRoute(k, ginEngine, v)
+	}
+}
+
 // RegisterGroupAPIRoute as RegisterAPIRout, the only difference between them is group method can
 // has pre base url
 func RegisterGroupAPIRoute(basePath string, ginEngine *gin.Engine, controllers []IBaseController) {
