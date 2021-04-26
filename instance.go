@@ -18,7 +18,7 @@ var (
 func CreateDefaultGin(
 	isProduct bool,
 	isCors bool,
-	logFolderPath string,
+	logger base.ILogger,
 	corsAllowOrigins []string,
 	corsAllowHeaders []string,
 	groupedControllers map[string][]router.IBaseController) (*gin.Engine, error) {
@@ -85,4 +85,27 @@ func setCors(r *gin.Engine, corsAllowOrigins []string, allowHeaders []string) {
 		c.AddAllowHeaders(allowHeaders...)
 	}
 	r.Use(cors.New(c))
+}
+
+// CreateGin2 create gin.Engine without mapping controllers
+func CreateGin2(
+	isProduct bool,
+	isCors bool,
+	logFolderPath string,
+	corsAllowOrigins []string,
+	corsAllowHeaders []string) (*gin.Engine, error) {
+	setMode(isProduct)
+
+	r := gin.Default()
+
+	if logger != nil {
+		base.SetLogger(logger)
+	}
+
+	if isCors {
+		setCors(r, corsAllowOrigins, corsAllowHeaders)
+	}
+
+	r.RedirectFixedPath = true
+	return r, nil
 }
