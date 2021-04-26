@@ -91,7 +91,7 @@ func setCors(r *gin.Engine, corsAllowOrigins []string, allowHeaders []string) {
 func CreateGin2(
 	isProduct bool,
 	isCors bool,
-	logFolderPath string,
+	logger base.ILogger,
 	corsAllowOrigins []string,
 	corsAllowHeaders []string) (*gin.Engine, error) {
 	setMode(isProduct)

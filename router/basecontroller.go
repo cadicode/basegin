@@ -9,8 +9,10 @@ import (
 
 	"github.com/cadicode/basegin/base"
 	"github.com/cadicode/basegin/responseutil"
+	"github.com/go-playground/validator/v10"
 
 	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/binding"
 )
 
 const (
@@ -294,4 +296,12 @@ func autoCustomMapping(router gin.IRouter, controllerName string, controller IBa
 		}
 	}
 	return nil
+}
+
+func RegisterValidators(vs map[string]func(validator.FieldLevel) bool) {
+	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
+		for k, f := range vs {
+			v.RegisterValidation(k, f)
+		}
+	}
 }
