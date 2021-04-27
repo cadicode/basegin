@@ -220,23 +220,23 @@ func autoMapping(router gin.IRouter, controllerName string, controller IBaseCont
 	})
 	router.PUT(path, func(c *gin.Context) {
 		defer ginRecover(c, nil)
-		controller.Post(c)
+		controller.Put(c)
 	})
 	router.DELETE(path, func(c *gin.Context) {
 		defer ginRecover(c, nil)
-		controller.Post(c)
+		controller.Delete(c)
 	})
 	router.HEAD(path, func(c *gin.Context) {
 		defer ginRecover(c, nil)
-		controller.Post(c)
+		controller.Head(c)
 	})
 	router.OPTIONS(path, func(c *gin.Context) {
 		defer ginRecover(c, nil)
-		controller.Post(c)
+		controller.Options(c)
 	})
 	router.PATCH(path, func(c *gin.Context) {
 		defer ginRecover(c, nil)
-		controller.Post(c)
+		controller.Patch(c)
 	})
 }
 
