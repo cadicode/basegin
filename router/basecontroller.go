@@ -9,8 +9,10 @@ import (
 
 	"github.com/cadicode/basegin/base"
 	"github.com/cadicode/basegin/responseutil"
+	"github.com/go-playground/validator/v10"
 
 	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/binding"
 )
 
 const (
@@ -150,6 +152,12 @@ func RegisterAPIRoute(ginEngine *gin.Engine, controllers []IBaseController) {
 	routesControllerMapping(ginEngine, controllers)
 }
 
+func RegisterAPIRouteByMapping(ginEngine *gin.Engine, groupedControllers map[string][]IBaseController) {
+	for k, v := range groupedControllers {
+		RegisterGroupAPIRoute(k, ginEngine, v)
+	}
+}
+
 // RegisterGroupAPIRoute as RegisterAPIRout, the only difference between them is group method can
 // has pre base url
 func RegisterGroupAPIRoute(basePath string, ginEngine *gin.Engine, controllers []IBaseController) {
@@ -212,23 +220,23 @@ func autoMapping(router gin.IRouter, controllerName string, controller IBaseCont
 	})
 	router.PUT(path, func(c *gin.Context) {
 		defer ginRecover(c, nil)
-		controller.Post(c)
+		controller.Put(c)
 	})
 	router.DELETE(path, func(c *gin.Context) {
 		defer ginRecover(c, nil)
-		controller.Post(c)
+		controller.Delete(c)
 	})
 	router.HEAD(path, func(c *gin.Context) {
 		defer ginRecover(c, nil)
-		controller.Post(c)
+		controller.Head(c)
 	})
 	router.OPTIONS(path, func(c *gin.Context) {
 		defer ginRecover(c, nil)
-		controller.Post(c)
+		controller.Options(c)
 	})
 	router.PATCH(path, func(c *gin.Context) {
 		defer ginRecover(c, nil)
-		controller.Post(c)
+		controller.Patch(c)
 	})
 }
 
@@ -294,4 +302,12 @@ func autoCustomMapping(router gin.IRouter, controllerName string, controller IBa
 		}
 	}
 	return nil
+}
+
+func RegisterValidators(vs map[string]func(validator.FieldLevel) bool) {
+	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
+		for k, f := range vs {
+			v.RegisterValidation(k, f)
+		}
+	}
 }

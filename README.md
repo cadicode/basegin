@@ -1,2 +1,2 @@
 # basegin
-base setting and tookits for gin framework
+base setting and toolkit for gin framework

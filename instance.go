@@ -30,7 +30,12 @@ func CreateDefaultGin(
 	if err != nil {
 		return nil, err
 	}
-	return CreateGin(isProduct, isCors, logger, corsAllowAllOrigins, corsAllowHeaders, groupedControllers)
+	if e, err := CreateGin(isProduct, isCors, logger, corsAllowAllOrigins, corsAllowHeaders); err == nil {
+		router.RegisterAPIRouteByMapping(e, groupedControllers)
+		return e, nil
+	} else {
+		return nil, err
+	}
 }
 
 // CreateGin create *gin.Engine with custom logger
@@ -39,8 +44,7 @@ func CreateGin(
 	isCors bool,
 	logger base.ILogger,
 	corsAllowOrigins []string,
-	corsAllowHeaders []string,
-	groupedControllers map[string][]router.IBaseController) (*gin.Engine, error) {
+	corsAllowHeaders []string) (*gin.Engine, error) {
 
 	setMode(isProduct)
 
@@ -55,10 +59,6 @@ func CreateGin(
 	}
 
 	r.RedirectFixedPath = true
-
-	for k, v := range groupedControllers {
-		router.RegisterGroupAPIRoute(k, r, v)
-	}
 	return r, nil
 }
 
